@@ -1,5 +1,7 @@
 const express = require("express");
 const ticketsRouter = express.Router();
+const Ticket = require("../model/Ticket.Schema");
+const { addTicket, getAllTickets } = require("../model/Ticket.model")
 
 const tickets = require("../util/exampleTickets");
 
@@ -21,15 +23,26 @@ ticketsRouter.param("ticketNum", (req, res, next, id) => {
 });
 
 //get all tickets
-ticketsRouter.get("/", (req, res, next) => {
-  res.status(200).send(tickets);
+ticketsRouter.get("/", async (req, res, next) => {
+  const result = await getAllTickets();
+  res.status(200).send(result);
 });
 
 //add a ticket
-ticketsRouter.post("/", (req, res, next) => {
-  const newTicket = req.body;
-  tickets.push(newTicket);
-  res.status(201).send(newTicket);
+ticketsRouter.post("/", async (req, res, next) => {
+  const testTicket = {
+    ticketNum,
+    dateSubmitted,
+    issue,
+    issueDetails,
+    status,
+    category,
+    submittedBy
+  } = req.body; 
+
+  const result = await addTicket(testTicket);
+  
+  res.status(201).send(testTicket);
 });
 
 //get individual ticket by ticket number
@@ -39,7 +52,7 @@ ticketsRouter.get("/:ticketNum", (req, res, next) => {
   );
   res.status(200).send(ticket);
 });
-// get comments for an individual ticket 
+// get comments for an individual ticket
 ticketsRouter.get("/:ticketNum/getComments", (req, res, next) => {
   const ticket = tickets.find(
     (ticket) => ticket.ticketNum === parseInt(req.params.ticketNum)
