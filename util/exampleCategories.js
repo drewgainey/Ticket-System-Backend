@@ -4,7 +4,8 @@ const categories =  [
     'Bank Recs',
     'Check Scanning & AR',
     'Work Orders',
-    'Budgets'
+    'Budgets',
+    "react query"
 ]
 
 module.exports = categories;
