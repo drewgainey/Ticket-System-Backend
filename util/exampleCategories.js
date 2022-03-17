@@ -5,7 +5,8 @@ const categories =  [
     'Check Scanning & AR',
     'Work Orders',
     'Budgets',
-    "react query"
+    "react query",
+    "heroku"
 ]
 
 module.exports = categories;
