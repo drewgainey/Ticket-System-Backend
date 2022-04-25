@@ -7,7 +7,8 @@ const TicketSchema = new Schema({
   dateSubmitted: { type: String, default: dateFormat() },
   issue: String,
   issueDetails: String,
-  status: { type: String, default: "Pending"},
+  status: { type: String, default: "Unreviewed"},
+  priority: String,
   category: String,
   submittedBy: String,
   comments: [
