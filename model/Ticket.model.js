@@ -13,7 +13,6 @@ const getAllTickets = () => {
   });
 };
 //add a ticket
-//need to update so it checks for duplicate ticket numbers
 const addTicket = (ticketObj) => {
   return new Promise((resolve, reject) => {
     try {

@@ -59,7 +59,7 @@ ticketsRouter.get("/:ticketNum", async (req, res, next) => {
 });
 // get comments for an individual ticket
 ticketsRouter.get("/:ticketNum/getComments", async (req, res, next) => {
-  const ticketNum = parseInt(req.params.ticketNum);
+  const ticketNum = Number(req.params.ticketNum);
   const comments = await getTicketCommentsByNumber(ticketNum);
 
   res.status(200).send(comments);
@@ -94,6 +94,11 @@ ticketsRouter.put("/:ticketNum", async (req, res, next) => {
   res.status(200).send(result);
 });
 //no delete methods as of yet. Right now there is no need to delete tickets
+
+//get max ticket number
+ticketsRouter.get("/maxTicketNumber", async (req, res, next) => {
+
+});
 
 //error handling
 ticketsRouter.use((err, req, res, next) => {
