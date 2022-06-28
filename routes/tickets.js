@@ -8,7 +8,8 @@ const {
   updateTicketStatusByNumber,
   getTicketCommentsByNumber,
   addCommentToTicketByNumber,
-} = require("../model/Ticket.model");
+} = require("../model/Ticket.model")
+const fetch = require("node-fetch")
 
 //get all tickets
 ticketsRouter.get("/", async (req, res, next) => {
@@ -21,8 +22,8 @@ ticketsRouter.get("/", async (req, res, next) => {
 ticketsRouter.post("/", async (req, res, next) => {
   const { ticketNum } = req.body;
   const result = await getTicketByNumber(ticketNum);
-  if(result.length !== 0) {
-    const err = new Error('invalid ticket number');
+  if (result.length !== 0) {
+    const err = new Error("invalid ticket number");
     err.status = 400;
     return next(err);
   }
@@ -40,6 +41,29 @@ ticketsRouter.post("/", async (req, res, next) => {
   } = req.body);
 
   const result = await addTicket(newTicket);
+
+  //update monday.com
+  let query =
+    `mutation {
+      create_item(
+        item_name: "${issue}"
+        board_id: 2862638925
+        group_id: "group_title"
+        ) {
+        id
+      } 
+    }`;
+
+  fetch("https://api.monday.com/v2", {
+    method: "post",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "eyJhbGciOiJIUzI1NiJ9.eyJ0aWQiOjE2NzY0Nzc1OSwidWlkIjozMTUwMDg1MSwiaWFkIjoiMjAyMi0wNi0yOFQwMDo0OToyMy43NjdaIiwicGVyIjoibWU6d3JpdGUiLCJhY3RpZCI6MTI1NjEzMDUsInJnbiI6InVzZTEifQ.N-7fGOvqTJQ8nCYdV6HWo8vDHER9PmM5hOjv0WrkIDw",
+    },
+    body: JSON.stringify({
+      query: query,
+    }),
+  })
 
   res.status(201).send(result);
 });
@@ -96,9 +120,7 @@ ticketsRouter.put("/:ticketNum", async (req, res, next) => {
 //no delete methods as of yet. Right now there is no need to delete tickets
 
 //get max ticket number
-ticketsRouter.get("/maxTicketNumber", async (req, res, next) => {
-
-});
+ticketsRouter.get("/maxTicketNumber", async (req, res, next) => {});
 
 //error handling
 ticketsRouter.use((err, req, res, next) => {
