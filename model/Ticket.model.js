@@ -1,4 +1,5 @@
 const { TicketSchema } = require("./Ticket.Schema");
+const fetch = require("node-fetch");
 
 // get all tickets
 const getAllTickets = () => {
@@ -20,6 +21,31 @@ const addTicket = (ticketObj) => {
         .save()
         .then((data) => resolve(data))
         .catch((error) => reject(error));
+      //update Monday.com
+      // let query = `mutation {
+      //   create_item(item_name: "${ticketObj.issue}", board_id: 2862638925, group_id: "group_title", column_values: "{\"dropdown7\":\"Residential\",\"prority\":\"Critical\",\"text3\":\"Hello World\",\"date4\":\"2022-06-28\"}") {
+      //     id
+      //   }
+      // }`;
+
+      const date = new Date();
+      const [withoutTime] = date.toISOString().split("T");
+      
+      fetch("https://api.monday.com/v2", {
+        method: "post",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization:
+            "eyJhbGciOiJIUzI1NiJ9.eyJ0aWQiOjE2NzY0Nzc1OSwidWlkIjozMTUwMDg1MSwiaWFkIjoiMjAyMi0wNi0yOFQwMDo0OToyMy43NjdaIiwicGVyIjoibWU6d3JpdGUiLCJhY3RpZCI6MTI1NjEzMDUsInJnbiI6InVzZTEifQ.N-7fGOvqTJQ8nCYdV6HWo8vDHER9PmM5hOjv0WrkIDw",
+        },
+        body: JSON.stringify({
+          query: `mutation {
+            create_item(item_name: "${ticketObj.issue}", board_id: 2862638925, group_id: "group_title", column_values: \"{\\\"dropdown7\\\":\\\"${ticketObj.category}\\\",\\\"prority\\\":\\\"${ticketObj.priority}\\\",\\\"text3\\\":\\\"${ticketObj.submittedBy}\\\",\\\"date4\\\":\\\"${withoutTime}\\\"}\") {
+              id
+            }
+          }`,
+        }),
+      });
     } catch (error) {
       reject(error);
     }

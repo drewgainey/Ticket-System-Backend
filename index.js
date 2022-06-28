@@ -20,7 +20,6 @@ app.use(bodyParser.json());
 
 //connect to mongodb
 const mongodbURL = process.env.MONGODB_URL;
-console.log(mongodbURL);
 mongoose
   .connect(mongodbURL, {
     useNewUrlParser: true,
