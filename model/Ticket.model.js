@@ -22,12 +22,6 @@ const addTicket = (ticketObj) => {
         .then((data) => resolve(data))
         .catch((error) => reject(error));
       //update Monday.com
-      // let query = `mutation {
-      //   create_item(item_name: "${ticketObj.issue}", board_id: 2862638925, group_id: "group_title", column_values: "{\"dropdown7\":\"Residential\",\"prority\":\"Critical\",\"text3\":\"Hello World\",\"date4\":\"2022-06-28\"}") {
-      //     id
-      //   }
-      // }`;
-
       const date = new Date();
       const [withoutTime] = date.toISOString().split("T");
       
