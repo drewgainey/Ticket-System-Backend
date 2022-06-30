@@ -22,24 +22,34 @@ const addTicket = (ticketObj) => {
         .then((data) => resolve(data))
         .catch((error) => reject(error));
       //update Monday.com
-      const date = new Date();
-      const [withoutTime] = date.toISOString().split("T");
-      
-      fetch("https://api.monday.com/v2", {
-        method: "post",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization:
-            "eyJhbGciOiJIUzI1NiJ9.eyJ0aWQiOjE2NzY0Nzc1OSwidWlkIjozMTUwMDg1MSwiaWFkIjoiMjAyMi0wNi0yOFQwMDo0OToyMy43NjdaIiwicGVyIjoibWU6d3JpdGUiLCJhY3RpZCI6MTI1NjEzMDUsInJnbiI6InVzZTEifQ.N-7fGOvqTJQ8nCYdV6HWo8vDHER9PmM5hOjv0WrkIDw",
-        },
-        body: JSON.stringify({
-          query: `mutation {
+      const mondayPosting = () => {
+        const date = new Date();
+        const [withoutTime] = date.toISOString().split("T");
+
+        fetch("https://api.monday.com/v2", {
+          method: "post",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization:
+              "eyJhbGciOiJIUzI1NiJ9.eyJ0aWQiOjE2NzY0Nzc1OSwidWlkIjozMTUwMDg1MSwiaWFkIjoiMjAyMi0wNi0yOFQwMDo0OToyMy43NjdaIiwicGVyIjoibWU6d3JpdGUiLCJhY3RpZCI6MTI1NjEzMDUsInJnbiI6InVzZTEifQ.N-7fGOvqTJQ8nCYdV6HWo8vDHER9PmM5hOjv0WrkIDw",
+          },
+          body: JSON.stringify({
+            query: `mutation {
             create_item(item_name: "${ticketObj.issue}", board_id: 2862638925, group_id: "group_title", column_values: \"{\\\"dropdown7\\\":\\\"${ticketObj.category}\\\",\\\"prority\\\":\\\"${ticketObj.priority}\\\",\\\"text3\\\":\\\"${ticketObj.submittedBy}\\\",\\\"date4\\\":\\\"${withoutTime}\\\"}\") {
               id
             }
           }`,
-        }),
-      });
+          }),
+        })
+          .then((res) => res.json())
+          .then((res) =>
+            TicketSchema.findOneAndUpdate(
+              { ticketNum: ticketNum },
+              { pulseID: res.data.create_item.id }
+            )
+          );
+      };
+      mondayPosting();
     } catch (error) {
       reject(error);
     }

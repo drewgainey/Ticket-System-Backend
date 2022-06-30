@@ -7,7 +7,7 @@ const TicketSchema = new Schema({
   dateSubmitted: { type: String, default: dateFormat() },
   issue: String,
   issueDetails: String,
-  status: { type: String, default: "Unreviewed"},
+  status: { type: String, default: "Not Started"},
   priority: String,
   category: String,
   submittedBy: String,
@@ -18,6 +18,7 @@ const TicketSchema = new Schema({
       notes: String,
     },
   ],
+  pulseID: {type: String, default: ""},
 });
 
 module.exports = {
