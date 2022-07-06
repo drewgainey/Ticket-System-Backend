@@ -114,6 +114,20 @@ const updateTicketStatusByNumber = (ticketNum, status) => {
     }
   });
 };
+const updateTicketStatusByPulseID = (pulseID, status) => {
+  return new Promise((resolve, reject) => {
+    try {
+      TicketSchema.findOneAndUpdate(
+        { pulseID: pulseID },
+        { status: status }
+      )
+        .then((data) => resolve(data))
+        .catch((error) => reject(error));
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
 //no delete methods as of yet. Right now there is no need to delete tickets
 
 module.exports = {
@@ -123,4 +137,5 @@ module.exports = {
   updateTicketStatusByNumber,
   getTicketCommentsByNumber,
   addCommentToTicketByNumber,
+  updateTicketStatusByPulseID,
 };
