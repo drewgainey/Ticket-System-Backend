@@ -2,7 +2,8 @@ const express = require("express");
 const mondayRouter = express.Router();
 
 mondayRouter.post("/", (req, res) => {
-    const { challenge, pulseId, columnTitle, value} = req.body;
+    const { challenge } = req.body;
+    const { pulseId, columnTitle, value } = req.body.event;
     console.log(req.body);
     console.log(`pulse ID:${pulseId}`);
     console.log(`columnTitle:${columnTitle}`);
