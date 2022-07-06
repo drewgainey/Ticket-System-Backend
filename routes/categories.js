@@ -1,7 +1,7 @@
 const express = require("express");
 const categoriesRouter = express.Router();
 
-const categories  = require("../util/exampleCategories")
+const categories  = require("../util/categories")
 
 
 //get all categories 
